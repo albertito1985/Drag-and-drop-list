@@ -1,4 +1,4 @@
-#Drag and Drop list
+# Drag and Drop list
 ## Drscription
 This is an exploration of JavaScripts capabilities for draga and drop. All the functionality included in this project is made from scratch including the drag and drop.
 ## Run the project

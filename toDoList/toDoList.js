@@ -24,7 +24,7 @@ class List {
     create = ()=>{
         // Outer container
         const outerDiv = document.createElement('div');
-        outerDiv.className = `col-12 col-md-6 border p-3 mt-5 list${this.listId}`;
+        outerDiv.className = `col-12 col-md-4 border rounded-2 p-3 list${this.listId} list`;
         outerDiv.id = `list${this.listId}`;
 
         // Title div

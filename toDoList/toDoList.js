@@ -23,6 +23,7 @@ class List {
         // Outer container
         const outerDiv = document.createElement('div');
         outerDiv.className = `col-12 col-md-6 border p-3 mt-5 list${this.listId}`;
+        outerDiv.id = `list${this.listId}`;
 
         // Title div
         const tittleDiv = document.createElement('div');
@@ -147,40 +148,46 @@ class List {
         this.refresh();
     };
 
-    loadListeners= ()=>{
+    loadItemsListeners= ()=>{
+        // Add event listeners to each list item
         let listItems = document.getElementsByClassName(`shoppinglist${this.listId}Item`);
-
         if(listItems.length>=1){
             Array.from(listItems).forEach((item)=>{
                 item.removeEventListener("click", this.crossItemOut);
 
                 item.removeEventListener("dragstart", this.dragStart);
-                item.removeEventListener("touchstart", this.dragStart);
-
-                item.removeEventListener("dragover", this.dragOver);
-                item.removeEventListener("touchmove", this.dragOver);
+                /* item.removeEventListener("touchstart", this.dragStart);
+ */
+                /* item.removeEventListener("dragover", this.dragOver); */
+                /* item.removeEventListener("touchmove", this.dragOver); */
 
                 item.addEventListener("click", this.crossItemOut);
 
                 item.addEventListener("dragstart", this.dragStart);
-                item.addEventListener("touchstart", this.dragStart);
+                /* item.addEventListener("touchstart", this.dragStart); */
 
-                item.addEventListener("dragover", this.dragOver);
-                item.addEventListener("touchmove", this.dragOver);
+                /* item.addEventListener("dragover", this.dragOver); */
+                /* item.addEventListener("touchmove", this.dragOver); */
             });
         };
 
+        //adds event listener to remove buttons
         let listItemsRemove = document.getElementsByClassName("listItemRemove");
         Array.from(listItemsRemove).forEach((item)=>{
             item.removeEventListener("click", this.removeItem.bind(item));
             item.addEventListener("click", this.removeItem.bind(item));
         });
 
+        //Adds event listeners to the submit button
         let form = document.getElementById(`myForm${this.listId}`);
         form.removeEventListener("submit", this.validateForm);
         form.addEventListener("submit", this.validateForm);
         
-        let listDisplay = document.getElementById(`shoppinglist${this.listId}`);
+        
+
+
+        
+        /* let listDisplay = document.getElementById(`shoppinglist${this.listId}`);
         
         if(listDisplay != null){
             listDisplay.removeEventListener("dragover", this.dragOver);
@@ -190,15 +197,30 @@ class List {
             listDisplay.addEventListener("dragover", this.dragOver);
             listDisplay.addEventListener("drop", this.dropItem.bind(this));
             listDisplay.addEventListener("touchend", this.dropItem.bind(this));
-        }
+        } */
     };
 
+    LoadListListeners(){
+        // Adds event listeners to the list for drag and drop
+        let listDisplay = document.getElementById(`list${this.listId}`);
+        
+        if(listDisplay != null){
+            listDisplay.removeEventListener("dragover", this.dragOver);
+            listDisplay.removeEventListener("drop", this.dropItem.bind(this));
+            /* listDisplay.removeEventListener("touchend", this.dropItem.bind(this)); */
+
+            listDisplay.addEventListener("dragover", this.dragOver);
+            listDisplay.addEventListener("drop", this.dropItem.bind(this));
+            /* listDisplay.addEventListener("touchend", this.dropItem.bind(this)); */
+        }
+    }
+
     dropItem(e){
+        console.log("drop");
         e.preventDefault();
-        console.log(e.dataTransfer.getData("application/json"));
         const data = JSON.parse(e.dataTransfer.getData("application/json"));
         const { item, fromListId, fromIndex } = data;
-
+        console.log(data);
         // Add to this list
         this.addItem(item);
 
@@ -213,7 +235,6 @@ class List {
     };
 
     dragStart(e){
-        console.log("drag started");
         if (!e.target.classList.contains(`shoppinglist${this.listId}Item`)) return;
         this.dragStarted = true;
 
@@ -242,7 +263,7 @@ class List {
 
     refresh= ()=>{
         this.show();
-        this.loadListeners();
+        this.loadItemsListeners();
     };
 
     validateForm = (e)=>{
@@ -273,7 +294,8 @@ function createLists(){
         listRow.append(list.create());
         list.load();
         list.show();
-        list.loadListeners();
+        list.loadItemsListeners();
+        list.LoadListListeners()
     });
    
 }

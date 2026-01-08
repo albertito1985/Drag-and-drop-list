@@ -17,6 +17,8 @@ class List {
         List.count++;
         this.dragStart = this.dragStart.bind(this);
         this.crossItemOut = this.crossItemOut.bind(this);
+        /* this.removeItem = this.removeItem.bind(this); */
+        this.dropItem = this.dropItem.bind(this);
     };
         
     create = ()=>{
@@ -119,6 +121,7 @@ class List {
                 button.type = "button";
                 button.ariaLabel = "Close";
                 button.classList.add("btn-close", "listItemRemove");
+                button.id=`removeItemList${this.listId}item${index}`;
                 listItemUI.appendChild(button);
                 itemsListUI.appendChild(listItemUI);
             })
@@ -154,50 +157,22 @@ class List {
         if(listItems.length>=1){
             Array.from(listItems).forEach((item)=>{
                 item.removeEventListener("click", this.crossItemOut);
-
                 item.removeEventListener("dragstart", this.dragStart);
-                /* item.removeEventListener("touchstart", this.dragStart);
- */
-                /* item.removeEventListener("dragover", this.dragOver); */
-                /* item.removeEventListener("touchmove", this.dragOver); */
 
                 item.addEventListener("click", this.crossItemOut);
-
                 item.addEventListener("dragstart", this.dragStart);
-                /* item.addEventListener("touchstart", this.dragStart); */
 
-                /* item.addEventListener("dragover", this.dragOver); */
-                /* item.addEventListener("touchmove", this.dragOver); */
+                 //adds event listener to remove buttons
+                let closeBtn= item.getElementsByClassName("btn-close")[0]
+                closeBtn.removeEventListener("click", this.removeItem);
+                closeBtn.addEventListener("click", this.removeItem);
             });
         };
-
-        //adds event listener to remove buttons
-        let listItemsRemove = document.getElementsByClassName("listItemRemove");
-        Array.from(listItemsRemove).forEach((item)=>{
-            item.removeEventListener("click", this.removeItem.bind(item));
-            item.addEventListener("click", this.removeItem.bind(item));
-        });
 
         //Adds event listeners to the submit button
         let form = document.getElementById(`myForm${this.listId}`);
         form.removeEventListener("submit", this.validateForm);
         form.addEventListener("submit", this.validateForm);
-        
-        
-
-
-        
-        /* let listDisplay = document.getElementById(`shoppinglist${this.listId}`);
-        
-        if(listDisplay != null){
-            listDisplay.removeEventListener("dragover", this.dragOver);
-            listDisplay.removeEventListener("drop", this.dropItem.bind(this));
-            listDisplay.removeEventListener("touchend", this.dropItem.bind(this));
-
-            listDisplay.addEventListener("dragover", this.dragOver);
-            listDisplay.addEventListener("drop", this.dropItem.bind(this));
-            listDisplay.addEventListener("touchend", this.dropItem.bind(this));
-        } */
     };
 
     LoadListListeners(){
@@ -206,24 +181,22 @@ class List {
         
         if(listDisplay != null){
             listDisplay.removeEventListener("dragover", this.dragOver);
-            listDisplay.removeEventListener("drop", this.dropItem.bind(this));
+            listDisplay.removeEventListener("drop", this.dropItem);
             /* listDisplay.removeEventListener("touchend", this.dropItem.bind(this)); */
 
             listDisplay.addEventListener("dragover", this.dragOver);
-            listDisplay.addEventListener("drop", this.dropItem.bind(this));
+            listDisplay.addEventListener("drop", this.dropItem);
             /* listDisplay.addEventListener("touchend", this.dropItem.bind(this)); */
         }
     }
 
     dropItem(e){
-        console.log("drop");
         e.preventDefault();
         const data = JSON.parse(e.dataTransfer.getData("application/json"));
         const { item, fromListId, fromIndex } = data;
-        console.log(data);
         // Add to this list
         this.addItem(item);
-
+        
         // Remove from the source list
         const sourceList = allLists.find(l => l.listId == fromListId);
         if (sourceList) {
@@ -253,9 +226,9 @@ class List {
         e.preventDefault();
     }
 
-    removeItem= (item)=>{
+    removeItem= (e)=>{
         event.stopPropagation();
-        let index = item.target.parentElement.dataset.itemIndex;
+        let index = e.target.parentElement.dataset.itemIndex;
         this.items.splice(index,1);
         this.saveLocally();
         this.refresh();

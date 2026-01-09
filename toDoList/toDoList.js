@@ -35,6 +35,15 @@ class List {
         tittleDiv.appendChild(tittle);
         outerDiv.appendChild(tittleDiv);
 
+
+        // Title div
+        const explanationtext = document.createElement('p');
+        explanationtext.className = 'col text-center';
+        explanationtext.textContent ="Add a new item or drag and drop items from another list:";
+        outerDiv.appendChild(explanationtext);
+
+
+
         // list div
         const listDiv = document.createElement('div');
         listDiv.className = 'col text-center pt-5 pb-5';
@@ -110,7 +119,7 @@ class List {
             itemsListUI.id=`shoppinglist${this.listId}`;
             this.items.forEach((item,index)=>{
                 let listItemUI = document.createElement('li');
-                listItemUI.classList.add(`shoppinglist${this.listId}Item`, "shoppinglistItem" , "p-2", "list-group-item", "d-flex", "justify-content-between", "align-items-start", "mt-3");
+                listItemUI.classList.add(`shoppinglist${this.listId}Item`, "shoppinglistItem" , "p-2", "list-group-item", "d-flex", "justify-content-between", "align-items-start", "mt-3", "border-black","border-1");
                 if(item.crossedOut)listItemUI.classList.add("crossedOut");
                 listItemUI.dataset.itemIndex = index;
                 listItemUI.dataset.listIndex = this.listId;

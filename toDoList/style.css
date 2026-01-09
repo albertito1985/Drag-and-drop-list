@@ -1,14 +1,14 @@
 
 .shoppinglistItem{
-    background-color: rgb(200,200,0);
-    border:none;
+    background-color: rgb(181, 182, 192);
+    /* border:1px solid black; */
 }
 
 
-.shoppinglistItem2{
+/* .shoppinglistItem2{
     background-color: rgb(220,220,220);
     border:none;
-}
+} */
 
 .crossedOut{
     text-decoration:line-through;
